@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity {
     private TaijiView taiji_view;
     private CircleProgress progress;
+    private PoetryTextView poetry_text;
     private int mProgress=0;
 
     @Override
@@ -20,6 +21,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         taiji_view = findViewById(R.id.taiji_view);
         progress = findViewById(R.id.progress);
+        poetry_text = findViewById(R.id.poetry_text);
+        String text = "2018年4月24日下午，\n" +
+                "正在湖北宜昌调研~~考察的\n" +
+                "《习近平》总书记来到♥ 紧邻「三峡」\n" +
+                "大坝的太平@￥%……&*（溪镇许家）冲村。";
+        poetry_text.setText(text);
         ScheduledExecutorService executors = Executors.newSingleThreadScheduledExecutor();
         MyRunable myRunable = new MyRunable();
         executors.scheduleAtFixedRate(myRunable,0,200,TimeUnit.MILLISECONDS);

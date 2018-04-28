@@ -1,6 +1,7 @@
 package com.yangzhenyu.customview;
 
 import android.animation.ValueAnimator;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.animation.LinearInterpolator;
@@ -19,9 +20,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         taiji_view = findViewById(R.id.taiji_view);
         progress = findViewById(R.id.progress);
         poetry_text = findViewById(R.id.poetry_text);
+        poetry_text.setTypeface(MyApplication.sSongTi18030);
         String text = "2018年4月24日下午，\n" +
                 "正在湖北宜昌调研~~考察的\n" +
                 "《习近平》总书记来到♥ 紧邻「三峡」\n" +

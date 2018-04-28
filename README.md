@@ -1,6 +1,6 @@
 # CustomView
+#效果见Wiki
 自定义view实践
-https://github.com/vampire184/CustomView/blob/master/app/src/main/assets/aaa.png
 
 
 1、自定义view（画太极）

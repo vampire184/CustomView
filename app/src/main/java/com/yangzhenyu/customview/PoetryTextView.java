@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.support.annotation.FontRes;
@@ -22,8 +23,8 @@ public class PoetryTextView extends View {
     private TextPaint textPaint;
     private float totalWidth;
     private float totalHeight;
-    private float ROW_WIDTH = 3;
-    private float LINE_WIDTH = 3;
+    private float ROW_WIDTH = 5;
+    private float LINE_WIDTH = 5;
     private String[] sText;
     private Rect rect;
     private boolean lastIsNumber = false;
@@ -52,16 +53,20 @@ public class PoetryTextView extends View {
 
             int textColor = array.getColor(R.styleable.PoetryTextView_text_color,Color.BLACK);
             textPaint.setColor(textColor);
-            float textSize = array.getDimensionPixelSize(R.styleable.PoetryTextView_text_size,20);
+            float textSize = array.getDimensionPixelSize(R.styleable.PoetryTextView_text_size,DensityUtil.dip2px(context,20));
             textPaint.setTextSize(textSize);
 
-            ROW_WIDTH = array.getDimensionPixelSize(R.styleable.PoetryTextView_row_padding,3);
-            LINE_WIDTH = array.getDimensionPixelSize(R.styleable.PoetryTextView_line_padding,3);
+            ROW_WIDTH = array.getDimensionPixelSize(R.styleable.PoetryTextView_row_padding,DensityUtil.dip2px(context,5));
+            LINE_WIDTH = array.getDimensionPixelSize(R.styleable.PoetryTextView_line_padding,DensityUtil.dip2px(context,5));
         }else{
             textPaint.setColor(Color.BLACK);
             textPaint.setTextSize(DensityUtil.dip2px(context,20));
+
+            ROW_WIDTH = DensityUtil.dip2px(context,5);
+            LINE_WIDTH = DensityUtil.dip2px(context,5);
         }
         textPaint.setAntiAlias(true);
+        textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setStrokeWidth(DensityUtil.dip2px(context,1));
 
         rect = new Rect();
@@ -102,8 +107,11 @@ public class PoetryTextView extends View {
         if(sText.length>0){
             canvas.translate(totalWidth,0);
             //稍微偏移一点，不然会有点歪
+            /*int numberLeft = (int)(-rect.width()+DensityUtil.dip2px(getContext(),3)/2.0);
+            int chineseLeft = (int)(-rect.width()-DensityUtil.dip2px(getContext(),3)/2.0);*/
+
             int numberLeft = (int)(-rect.width()+DensityUtil.dip2px(getContext(),3)/2.0);
-            int chineseLeft = (int)(-rect.width()-DensityUtil.dip2px(getContext(),3)/2.0);
+            int chineseLeft = (int)(-rect.width()/2.0);
             for(String s:sText){
                 float mHeight = 0;
                 lastIsNumber = false;
@@ -115,15 +123,15 @@ public class PoetryTextView extends View {
                     if(!(19968<=asc2&&asc2<=40869)){
                         if(lastIsChinese){
                             if(i==0){
-                                mHeight +=LINE_WIDTH-rect.height()/8.0;
+                                mHeight +=rect.width()/2+LINE_WIDTH-rect.width()/8.0;
                             }else{
-                                mHeight +=(-rect.height()/8.0+LINE_WIDTH*2);
+                                mHeight +=(rect.width()/2-rect.width()/8.0+LINE_WIDTH*2);
                             }
                         }else{
                             if(i==0){
-                                mHeight +=LINE_WIDTH;
+                                mHeight +=rect.width()/2+LINE_WIDTH;
                             }else{
-                                mHeight +=rect.height()/2.0+LINE_WIDTH*2;
+                                mHeight +=rect.width()/2+LINE_WIDTH*2;
                             }
                         }
                         textPaint.setTypeface(MyApplication.sApplySymBols);
@@ -135,15 +143,15 @@ public class PoetryTextView extends View {
                     }else{
                         if(lastIsNumber){
                             if(i==0){
-                                mHeight +=rect.height()*1.5;
+                                mHeight +=rect.width()*1.5;
                             }else{
-                                mHeight +=rect.height()*1.5+LINE_WIDTH;
+                                mHeight +=rect.width()*1.5+LINE_WIDTH;
                             }
                         }else{
                             if(i==0){
-                                mHeight +=rect.height();
+                                mHeight +=rect.width();
                             }else{
-                                mHeight +=rect.height()+LINE_WIDTH;
+                                mHeight +=rect.width()+LINE_WIDTH;
                             }
                         }
 

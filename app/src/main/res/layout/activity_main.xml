@@ -15,7 +15,6 @@
 
     <com.yangzhenyu.customview.CircleProgress
         android:id="@+id/progress"
-        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -24,7 +23,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:text_size="30sp"
+        app:text_size="20sp"
         app:text_color="#1b9dff"
         app:row_padding="10dp"
         app:line_padding="5dp"/>

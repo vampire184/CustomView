@@ -107,9 +107,6 @@ public class PoetryTextView extends View {
         if(sText.length>0){
             canvas.translate(totalWidth,0);
             //稍微偏移一点，不然会有点歪
-            /*int numberLeft = (int)(-rect.width()+DensityUtil.dip2px(getContext(),3)/2.0);
-            int chineseLeft = (int)(-rect.width()-DensityUtil.dip2px(getContext(),3)/2.0);*/
-
             int numberLeft = (int)(-rect.width()+DensityUtil.dip2px(getContext(),3)/2.0);
             int chineseLeft = (int)(-rect.width()/2.0);
             for(String s:sText){
@@ -168,6 +165,7 @@ public class PoetryTextView extends View {
     }
 
     public void setText(String text){
+        //设置文字，并且计算控件大小
         sText = text.split("\n");
         totalWidth = (rect.width()+ROW_WIDTH)*sText.length;
         for(String s:sText){

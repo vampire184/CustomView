@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.support.annotation.FontRes;
 import android.support.annotation.Nullable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
@@ -16,7 +15,9 @@ import android.view.View;
 import tools.DensityUtil;
 
 /**
- * Created by yangzhenyu on 2018/4/26.
+ *
+ * @author yangzhenyu
+ * @date 2018/4/26
  */
 
 public class PoetryTextView extends View {
@@ -32,6 +33,7 @@ public class PoetryTextView extends View {
     private float defaultWidth = 30;
     private float defaultHeight = 30;
     private Typeface realTypeface;
+    private Rect charRect;
 
     public PoetryTextView(Context context) {
         this(context,null);
@@ -46,31 +48,33 @@ public class PoetryTextView extends View {
         initPaint(context,attrs);
     }
 
-    private void initPaint(Context context,AttributeSet attributeSet) {
+    private void initPaint(Context context, AttributeSet attributeSet) {
         textPaint = new TextPaint();
-        if(attributeSet!=null){
-            TypedArray array = context.obtainStyledAttributes(attributeSet,R.styleable.PoetryTextView);
 
-            int textColor = array.getColor(R.styleable.PoetryTextView_text_color,Color.BLACK);
+        charRect = new Rect();
+        if(attributeSet!=null){
+            TypedArray array = context.obtainStyledAttributes(attributeSet, R.styleable.PoetryTextView);
+
+            int textColor = array.getColor(R.styleable.PoetryTextView_text_color, Color.BLACK);
             textPaint.setColor(textColor);
-            float textSize = array.getDimensionPixelSize(R.styleable.PoetryTextView_text_size,DensityUtil.dip2px(context,20));
+            float textSize = array.getDimensionPixelSize(R.styleable.PoetryTextView_text_size, DensityUtil.dip2px(getContext(),20));
             textPaint.setTextSize(textSize);
 
-            ROW_WIDTH = array.getDimensionPixelSize(R.styleable.PoetryTextView_row_padding,DensityUtil.dip2px(context,5));
-            LINE_WIDTH = array.getDimensionPixelSize(R.styleable.PoetryTextView_line_padding,DensityUtil.dip2px(context,5));
+            ROW_WIDTH = array.getDimensionPixelSize(R.styleable.PoetryTextView_row_padding,DensityUtil.dip2px(getContext(),5));
+            LINE_WIDTH = array.getDimensionPixelSize(R.styleable.PoetryTextView_line_padding,DensityUtil.dip2px(getContext(),5));
         }else{
             textPaint.setColor(Color.BLACK);
-            textPaint.setTextSize(DensityUtil.dip2px(context,20));
+            textPaint.setTextSize(DensityUtil.dip2px(getContext(),20));
 
-            ROW_WIDTH = DensityUtil.dip2px(context,5);
-            LINE_WIDTH = DensityUtil.dip2px(context,5);
+            ROW_WIDTH = DensityUtil.dip2px(getContext(),5);
+            LINE_WIDTH = DensityUtil.dip2px(getContext(),5);
         }
         textPaint.setAntiAlias(true);
         textPaint.setTextAlign(Paint.Align.CENTER);
-        textPaint.setStrokeWidth(DensityUtil.dip2px(context,1));
+        textPaint.setStrokeWidth(DensityUtil.dip2px(getContext(),1));
 
         rect = new Rect();
-        textPaint.getTextBounds("国",0,1,rect);
+        textPaint.getTextBounds("餐",0,1,rect);
     }
 
     @Override
@@ -104,7 +108,7 @@ public class PoetryTextView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if(sText.length>0){
+        if(sText!=null&&sText.length>0){
             canvas.translate(totalWidth,0);
             //稍微偏移一点，不然会有点歪
             int numberLeft = (int)(-rect.width()+DensityUtil.dip2px(getContext(),3)/2.0);
@@ -116,21 +120,23 @@ public class PoetryTextView extends View {
                 for(int i=0;i<s.length();i++){
                     char cs = s.charAt(i);
                     int asc2 = (int)cs;
+                    textPaint.getTextBounds(s,i,i+1, charRect);
                     //非中文的字符全部倒转90
                     if(!(19968<=asc2&&asc2<=40869)){
                         if(lastIsChinese){
                             if(i==0){
-                                mHeight +=rect.width()/2+LINE_WIDTH-rect.width()/8.0;
+                                mHeight += charRect.width();
                             }else{
-                                mHeight +=(rect.width()/2-rect.width()/8.0+LINE_WIDTH*2);
+                                mHeight += (charRect.width()+DensityUtil.dip2px(getContext(),1.5f)+LINE_WIDTH);
                             }
                         }else{
                             if(i==0){
-                                mHeight +=rect.width()/2+LINE_WIDTH;
+                                mHeight += charRect.width();
                             }else{
-                                mHeight +=rect.width()/2+LINE_WIDTH*2;
+                                mHeight += (charRect.width()+DensityUtil.dip2px(getContext(),1.5f)+LINE_WIDTH);
                             }
                         }
+
                         textPaint.setTypeface(MyApplication.sApplySymBols);
                         canvas.rotate(90,numberLeft, mHeight);
                         canvas.drawText(String.valueOf(cs),numberLeft, mHeight,textPaint);
@@ -140,15 +146,15 @@ public class PoetryTextView extends View {
                     }else{
                         if(lastIsNumber){
                             if(i==0){
-                                mHeight +=rect.width()*1.5;
+                                mHeight += (charRect.height());
                             }else{
-                                mHeight +=rect.width()*1.5+LINE_WIDTH;
+                                mHeight += (charRect.height()+LINE_WIDTH);
                             }
-                        }else{
+                        }else {
                             if(i==0){
-                                mHeight +=rect.width();
+                                mHeight += (charRect.height());
                             }else{
-                                mHeight +=rect.width()+LINE_WIDTH;
+                                mHeight += (charRect.height()+LINE_WIDTH);
                             }
                         }
 
@@ -167,18 +173,40 @@ public class PoetryTextView extends View {
     public void setText(String text){
         //设置文字，并且计算控件大小
         sText = text.split("\n");
-        totalWidth = (rect.width()+ROW_WIDTH)*sText.length;
+        totalWidth = (rect.width()+ROW_WIDTH)*sText.length-ROW_WIDTH+
+                DensityUtil.dip2px(getContext(),2);
+
+        Rect mRect = new Rect();
         for(String s:sText){
-            Rect mRect = new Rect();
-            textPaint.getTextBounds(s,0,s.length(),mRect);
-            float tempWidth = mRect.width()+(s.length()-1)*LINE_WIDTH;
-            if(tempWidth>totalHeight){
-                totalHeight = tempWidth;
+            float tempHeight = 0;
+            for(int i=0;i<s.length();i++){
+                textPaint.getTextBounds(s,i,i+1,mRect);
+                char cs = s.charAt(i);
+                int asc2 = (int)cs;
+                //非中文的字符全部倒转90
+                if(!(19968<=asc2&&asc2<=40869)){
+                    tempHeight +=(mRect.width()+DensityUtil.dip2px(getContext(),1.5f));
+                }else{
+                    tempHeight +=mRect.height();
+                }
+            }
+            tempHeight += (s.length()-1)*LINE_WIDTH+
+                    DensityUtil.dip2px(getContext(),5);
+            if(tempHeight>totalHeight){
+                totalHeight = tempHeight;
             }
         }
         defaultWidth = totalWidth;
         defaultHeight = totalHeight;
         invalidate();
+    }
+
+    public float getDefaultHeight(){
+        return defaultHeight;
+    }
+
+    public float getDefaultWidth(){
+        return defaultWidth;
     }
 
 

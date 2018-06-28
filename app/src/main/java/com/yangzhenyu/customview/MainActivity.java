@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
                 "正在湖北宜昌调研~~考察的\n" +
                 "《习近平》总书记来到♥ 紧邻「三峡」\n" +
                 "大坝的太平@￥%……&*（溪镇许家）冲村。";
+
+//        String text = "正在湖北宜昌调研考察";
         poetry_text.setText(text);
         ScheduledExecutorService executors = Executors.newSingleThreadScheduledExecutor();
         MyRunable myRunable = new MyRunable();

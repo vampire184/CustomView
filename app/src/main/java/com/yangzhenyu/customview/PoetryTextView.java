@@ -111,7 +111,8 @@ public class PoetryTextView extends View {
         if(sText!=null&&sText.length>0){
             canvas.translate(totalWidth,0);
             //稍微偏移一点，不然会有点歪
-            int numberLeft = (int)(-rect.width()+DensityUtil.dip2px(getContext(),3)/2.0);
+//            int numberLeft = (int)(-rect.width()+DensityUtil.dip2px(getContext(),3)/2.0);
+            int numberLeft = (int)(-rect.width()+DensityUtil.dip2px(getContext(),3));
             int chineseLeft = (int)(-rect.width()/2.0);
             for(String s:sText){
                 float mHeight = 0;
@@ -120,9 +121,9 @@ public class PoetryTextView extends View {
                 for(int i=0;i<s.length();i++){
                     char cs = s.charAt(i);
                     int asc2 = (int)cs;
-                    textPaint.getTextBounds(s,i,i+1, charRect);
                     //非中文的字符全部倒转90
                     if(!(19968<=asc2&&asc2<=40869)){
+                        textPaint.getTextBounds(s,i,i+1, charRect);
                         if(lastIsChinese){
                             if(i==0){
                                 mHeight += charRect.width();
@@ -146,15 +147,15 @@ public class PoetryTextView extends View {
                     }else{
                         if(lastIsNumber){
                             if(i==0){
-                                mHeight += (charRect.height());
+                                mHeight += rect.height();
                             }else{
-                                mHeight += (charRect.height()+LINE_WIDTH);
+                                mHeight += (rect.height()+LINE_WIDTH);
                             }
                         }else {
                             if(i==0){
-                                mHeight += (charRect.height());
+                                mHeight += rect.height();
                             }else{
-                                mHeight += (charRect.height()+LINE_WIDTH);
+                                mHeight += (rect.height()+LINE_WIDTH);
                             }
                         }
 
@@ -175,19 +176,18 @@ public class PoetryTextView extends View {
         sText = text.split("\n");
         totalWidth = (rect.width()+ROW_WIDTH)*sText.length-ROW_WIDTH+
                 DensityUtil.dip2px(getContext(),2);
-
         Rect mRect = new Rect();
         for(String s:sText){
             float tempHeight = 0;
             for(int i=0;i<s.length();i++){
-                textPaint.getTextBounds(s,i,i+1,mRect);
                 char cs = s.charAt(i);
                 int asc2 = (int)cs;
                 //非中文的字符全部倒转90
                 if(!(19968<=asc2&&asc2<=40869)){
+                    textPaint.getTextBounds(s,i,i+1,mRect);
                     tempHeight +=(mRect.width()+DensityUtil.dip2px(getContext(),1.5f));
                 }else{
-                    tempHeight +=mRect.height();
+                    tempHeight +=rect.height();
                 }
             }
             tempHeight += (s.length()-1)*LINE_WIDTH+

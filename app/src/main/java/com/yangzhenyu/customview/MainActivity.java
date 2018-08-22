@@ -1,6 +1,7 @@
 package com.yangzhenyu.customview;
 
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
@@ -12,6 +13,7 @@ import android.support.v7.graphics.Palette;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -23,19 +25,22 @@ import java.util.concurrent.TimeUnit;
 
 import tools.DensityUtil;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private TaijiView taiji_view;
     private CircleProgress progress;
     private PoetryTextView poetry_text;
     private LinearLayout mLeftLayout;
     private ImageView mIcon;
     private int mProgress=0;
+    private Button mShowSecondView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mShowSecondView = (Button) findViewById(R.id.show_second_view);
+        mShowSecondView.setOnClickListener(this);
         taiji_view = findViewById(R.id.taiji_view);
         mLeftLayout = (LinearLayout) findViewById(R.id.left_layout);
         mIcon = (ImageView) findViewById(R.id.icon);
@@ -108,6 +113,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.show_second_view:
+                Intent intent = new Intent(this,LineActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                break;
+        }
+    }
+
     class MyRunable implements Runnable{
         @Override
         public void run() {

@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView mIcon;
     private int mProgress=0;
     private Button mShowSecondView;
+    private Button mShowGuideView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mShowSecondView = (Button) findViewById(R.id.show_second_view);
         mShowSecondView.setOnClickListener(this);
+        mShowGuideView = (Button) findViewById(R.id.show_guide_view);
+        mShowGuideView.setOnClickListener(this);
         taiji_view = findViewById(R.id.taiji_view);
         mLeftLayout = (LinearLayout) findViewById(R.id.left_layout);
         mIcon = (ImageView) findViewById(R.id.icon);
@@ -120,6 +123,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.show_second_view:
                 Intent intent = new Intent(this,LineActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.show_guide_view:
+                Intent guideIntent = new Intent(this,GuideActivity.class);
+                startActivity(guideIntent);
                 break;
             default:
                 break;

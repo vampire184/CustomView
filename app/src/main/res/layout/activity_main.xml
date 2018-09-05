@@ -18,6 +18,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="显示lineView"/>
+        <Button
+            android:id="@+id/show_guide_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="显示引导遮罩"/>
 
         <com.yangzhenyu.customview.TaijiView
             android:id="@+id/taiji_view"

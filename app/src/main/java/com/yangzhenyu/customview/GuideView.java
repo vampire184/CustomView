@@ -49,12 +49,11 @@ public class GuideView extends View {
         //这个方法已经被标注为过时的方法了，如果你的应用启用了硬件加速，你是看不到任何阴影效果的
         paint.setMaskFilter(new BlurMaskFilter(10, BlurMaskFilter.Blur.INNER));
         //关闭当前view的硬件加速
-//        setLayerType(LAYER_TYPE_SOFTWARE, null);
+        setLayerType(LAYER_TYPE_SOFTWARE, null);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         manager.getDefaultDisplay().getMetrics(displayMetrics);
         width = displayMetrics.widthPixels;
         height = displayMetrics.heightPixels;
-        Log.d("aaa","宽度："+width+" height:"+height);
         path = new Path();
         path.moveTo(50,50);
         path.lineTo(50,200);
@@ -68,8 +67,9 @@ public class GuideView extends View {
         super.onDraw(canvas);
         canvas.drawColor(Color.parseColor("#80000000"));
         canvas.drawPath(path,paint);
-        canvas.drawCircle(width/2,height/2, DensityUtil.dip2px(getContext(),50),paint);
-        canvas.drawCircle(width/2,DensityUtil.dip2px(getContext(),80), DensityUtil.dip2px(getContext(),50),paint);
+        canvas.drawCircle(width/2,height/2, DensityUtil.dip2px(50),paint);
+        canvas.drawCircle(width/2,DensityUtil.dip2px(80), DensityUtil.dip2px(50),paint);
+        canvas.drawCircle(width/2,DensityUtil.dip2px(120), DensityUtil.dip2px(50),paint);
         canvas.drawText("阴影遮罩",500,1000,paint);
     }
 }

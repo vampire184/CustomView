@@ -50,7 +50,8 @@
             app:text_size="20sp"
             app:text_color="#1b9dff"
             app:row_padding="10dp"
-            app:line_padding="5dp"/>
+            app:line_padding="5dp"
+            app:number_offset="13dp"/>
     </RelativeLayout>
 
 </LinearLayout>

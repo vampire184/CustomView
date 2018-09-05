@@ -13,6 +13,8 @@
         <attr name="text_size" format="dimension"/>
         <attr name="row_padding" format="dimension"/>
         <attr name="line_padding" format="dimension"/>
+        <attr name="number_offset" format="dimension"/>
+        <attr name="number_vertical_offset" format="dimension"/>
     </declare-styleable>
 
 </resources>

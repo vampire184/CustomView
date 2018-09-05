@@ -34,6 +34,8 @@ public class PoetryTextView extends View {
     private float defaultHeight = 30;
     private Typeface realTypeface;
     private Rect charRect;
+    private int mNumberOffset;
+    private int mMumVerticalOffset;
 
     public PoetryTextView(Context context) {
         this(context,null);
@@ -57,21 +59,25 @@ public class PoetryTextView extends View {
 
             int textColor = array.getColor(R.styleable.PoetryTextView_text_color, Color.BLACK);
             textPaint.setColor(textColor);
-            float textSize = array.getDimensionPixelSize(R.styleable.PoetryTextView_text_size, DensityUtil.dip2px(getContext(),20));
+            float textSize = array.getDimensionPixelSize(R.styleable.PoetryTextView_text_size, DensityUtil.dip2px(20));
             textPaint.setTextSize(textSize);
 
-            ROW_WIDTH = array.getDimensionPixelSize(R.styleable.PoetryTextView_row_padding,DensityUtil.dip2px(getContext(),5));
-            LINE_WIDTH = array.getDimensionPixelSize(R.styleable.PoetryTextView_line_padding,DensityUtil.dip2px(getContext(),5));
+            ROW_WIDTH = array.getDimensionPixelSize(R.styleable.PoetryTextView_row_padding,DensityUtil.dip2px(5));
+            LINE_WIDTH = array.getDimensionPixelSize(R.styleable.PoetryTextView_line_padding,DensityUtil.dip2px(5));
+            mNumberOffset = array.getDimensionPixelOffset(R.styleable.PoetryTextView_number_offset,DensityUtil.dip2px(5));
+            mMumVerticalOffset = array.getDimensionPixelOffset(R.styleable.PoetryTextView_number_vertical_offset,DensityUtil.dip2px(0));
         }else{
             textPaint.setColor(Color.BLACK);
-            textPaint.setTextSize(DensityUtil.dip2px(getContext(),20));
+            textPaint.setTextSize(DensityUtil.dip2px(20));
 
-            ROW_WIDTH = DensityUtil.dip2px(getContext(),5);
-            LINE_WIDTH = DensityUtil.dip2px(getContext(),5);
+            ROW_WIDTH = DensityUtil.dip2px(5);
+            LINE_WIDTH = DensityUtil.dip2px(5);
+            mNumberOffset = DensityUtil.dip2px(5);
+            mMumVerticalOffset = DensityUtil.dip2px(0);
         }
         textPaint.setAntiAlias(true);
         textPaint.setTextAlign(Paint.Align.CENTER);
-        textPaint.setStrokeWidth(DensityUtil.dip2px(getContext(),1));
+        textPaint.setStrokeWidth(DensityUtil.dip2px(1));
 
         rect = new Rect();
         textPaint.getTextBounds("餐",0,1,rect);
@@ -111,9 +117,9 @@ public class PoetryTextView extends View {
         if(sText!=null&&sText.length>0){
             canvas.translate(totalWidth,0);
             //稍微偏移一点，不然会有点歪
-//            int numberLeft = (int)(-rect.width()+DensityUtil.dip2px(getContext(),3)/2.0);
-            int numberLeft = (int)(-rect.width()+DensityUtil.dip2px(getContext(),3));
-            int chineseLeft = (int)(-rect.width()/2.0);
+//            int numberLeft = (int)(-rect.width()+DensityUtil.dip2px(3));
+            int numberLeft = -(rect.width()+mNumberOffset)/2;
+            int chineseLeft = -rect.width()/2;
             for(String s:sText){
                 float mHeight = 0;
                 lastIsNumber = false;
@@ -123,22 +129,23 @@ public class PoetryTextView extends View {
                     int asc2 = (int)cs;
                     //非中文的字符全部倒转90
                     if(!(19968<=asc2&&asc2<=40869)){
+
                         textPaint.getTextBounds(s,i,i+1, charRect);
                         if(lastIsChinese){
                             if(i==0){
-                                mHeight += charRect.width();
+                                mHeight += (charRect.width()+mMumVerticalOffset);
                             }else{
-                                mHeight += (charRect.width()+DensityUtil.dip2px(getContext(),1.5f)+LINE_WIDTH);
+                                mHeight += (charRect.width()+mMumVerticalOffset+DensityUtil.dip2px(1.5f)+LINE_WIDTH);
                             }
                         }else{
                             if(i==0){
-                                mHeight += charRect.width();
+                                mHeight += (charRect.width()+mMumVerticalOffset);
                             }else{
-                                mHeight += (charRect.width()+DensityUtil.dip2px(getContext(),1.5f)+LINE_WIDTH);
+                                mHeight += (charRect.width()+mMumVerticalOffset+DensityUtil.dip2px(1.5f)+LINE_WIDTH);
                             }
                         }
 
-                        textPaint.setTypeface(MyApplication.sApplySymBols);
+//                        textPaint.setTypeface(MyApplication.sApplySymBols);
                         canvas.rotate(90,numberLeft, mHeight);
                         canvas.drawText(String.valueOf(cs),numberLeft, mHeight,textPaint);
                         canvas.rotate(-90,numberLeft, mHeight);
@@ -175,7 +182,7 @@ public class PoetryTextView extends View {
         //设置文字，并且计算控件大小
         sText = text.split("\n");
         totalWidth = (rect.width()+ROW_WIDTH)*sText.length-ROW_WIDTH+
-                DensityUtil.dip2px(getContext(),2);
+                DensityUtil.dip2px(2);
         Rect mRect = new Rect();
         for(String s:sText){
             float tempHeight = 0;
@@ -185,13 +192,13 @@ public class PoetryTextView extends View {
                 //非中文的字符全部倒转90
                 if(!(19968<=asc2&&asc2<=40869)){
                     textPaint.getTextBounds(s,i,i+1,mRect);
-                    tempHeight +=(mRect.width()+DensityUtil.dip2px(getContext(),1.5f));
+                    tempHeight +=(mRect.width()+DensityUtil.dip2px(1.5f)+mMumVerticalOffset);
                 }else{
                     tempHeight +=rect.height();
                 }
             }
             tempHeight += (s.length()-1)*LINE_WIDTH+
-                    DensityUtil.dip2px(getContext(),5);
+                    DensityUtil.dip2px(5);
             if(tempHeight>totalHeight){
                 totalHeight = tempHeight;
             }
@@ -209,6 +216,31 @@ public class PoetryTextView extends View {
         return defaultWidth;
     }
 
+    public void setTextColor(int color){
+        textPaint.setColor(color);
+    }
+
+    public void setTextSize(int size){
+        textPaint.setTextSize(size);
+    }
+
+    public void setmNumberOffset(int offset){
+        mNumberOffset = offset;
+    }
+
+    public void setmMumVerticalOffset(int offset){
+        mMumVerticalOffset = offset;
+    }
+
+    /**
+     * 设置间距
+     * @param width 竖向文字，列间距
+     * @param height 竖向文字，行间距
+     */
+    public void setTextSpace(int width,int height){
+        LINE_WIDTH = height;
+        ROW_WIDTH = width;
+    }
 
     public void setTypeface(Typeface typeface) {
         if (typeface == null) {

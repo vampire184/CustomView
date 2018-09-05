@@ -98,9 +98,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if(from!=null&&to!=null){
                     TextView view = new TextView(MainActivity.this);
                     RelativeLayout.LayoutParams viewParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                            DensityUtil.dip2px(MainActivity.this,50));
-                    viewParams.topMargin = DensityUtil.dip2px(MainActivity.this,10);
-                    viewParams.leftMargin = DensityUtil.dip2px(MainActivity.this,5);
+                            DensityUtil.dip2px(50));
+                    viewParams.topMargin = DensityUtil.dip2px(10);
+                    viewParams.leftMargin = DensityUtil.dip2px(5);
                     view.setTextColor(from.getBodyTextColor());
                     view.setGravity(Gravity.CENTER);
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
@@ -39,11 +40,12 @@ public class GuideView extends View {
     private void init(Context context) {
         setWillNotDraw(false);
         paint = new Paint();
-        paint.setStrokeWidth(3);
+        paint.setStrokeWidth(30);
         paint.setAntiAlias(true);
 //        paint.setColor(Color.RED);
         paint.setTextSize(40);
-//        paint.setStyle(Paint.Style.STROKE);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeCap(Paint.Cap.ROUND);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
         WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         //这个方法已经被标注为过时的方法了，如果你的应用启用了硬件加速，你是看不到任何阴影效果的
@@ -56,10 +58,9 @@ public class GuideView extends View {
         height = displayMetrics.heightPixels;
         path = new Path();
         path.moveTo(50,50);
-        path.lineTo(50,200);
-        path.lineTo(200,100);
-        path.lineTo(200,50);
-        path.close();
+        path.quadTo(50,50,(300+50)/2,(600+50)/2);
+        path.quadTo(300,600,(200+300)/2,(900+600)/2);
+        path.quadTo(200,900,(500+200)/2,(1500+900)/2);
     }
 
     @Override
@@ -67,9 +68,6 @@ public class GuideView extends View {
         super.onDraw(canvas);
         canvas.drawColor(Color.parseColor("#80000000"));
         canvas.drawPath(path,paint);
-        canvas.drawCircle(width/2,height/2, DensityUtil.dip2px(50),paint);
-        canvas.drawCircle(width/2,DensityUtil.dip2px(80), DensityUtil.dip2px(50),paint);
-        canvas.drawCircle(width/2,DensityUtil.dip2px(120), DensityUtil.dip2px(50),paint);
-        canvas.drawText("阴影遮罩",500,1000,paint);
+        canvas.drawCircle(width/2,DensityUtil.dip2px(100), DensityUtil.dip2px(50),paint);
     }
 }
